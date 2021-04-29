@@ -96,6 +96,8 @@ let
 
   rust = with pkgs; [
     cargo
+    rustfmt
+    rustPackages.clippy
   ];
 
   go = with pkgs; [

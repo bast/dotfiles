@@ -15,35 +15,23 @@ let
       fish = {
         enable = true;
         shellInit = ''
+          set -x DOTNET_CLI_TELEMETRY_OPTOUT 1
           set -e TMUX_TMPDIR
           set PATH ~/.local/bin $HOME/.nix-profile/bin ~/.dotnet/tools $PATH
           bind \cp push-line
         '';
         promptInit = ''
+          set -x fish_prompt_pwd_dir_length 80
           omf theme j
         '';
         shellAliases = {
-          ls = "exa";
-          ll = "ls -l";
-          la = "ls -a";
-          lla = "ls -la";
-          ltr = "ls -l --sort newest";
-          # ltr = "ls -ltr";
-          cat = "bat -p";
-          diff = "diff -u";
-          pssh = "parallel-ssh -t 0";
-          xopen = "xdg-open";
-          lmod = "module";
-          unhist = "unset HISTFILE";
-          nix-zsh = ''nix-shell --command "exec zsh"'';
-          nix-fish = ''nix-shell --command "exec fish"'';
-          halt = "halt -p";
-          kc = "kubectl";
-          k = "kubectl";
-          tw = "timew";
+          vi = "vim";
           vim = "nvim";
+          ls = "exa $argv";
+          ll = "ls -l --sort=modified --reverse";
+          cat = "bat -p $argv";
+          grep = "rg --hidden $argv";
           home-manager = "home-manager -f ~/.dotfiles/config/nixpkgs/home.nix";
-          lock = "xset s activate";
         };
         functions = {
           push-line = ''
@@ -55,104 +43,79 @@ let
         };
       };
 
-      neovim =
-        let
-          vimPlugins = pkgs.vimPlugins // {
-            vim-gnupg = pkgs.vimUtils.buildVimPlugin {
-              name = "vim-gnupg";
-              src = ~/.dotfiles/vim-plugins/vim-gnupg;
-            };
-            vim-singularity-syntax = pkgs.vimUtils.buildVimPlugin {
-              name = "vim-singularity-syntax";
-              src = ~/.dotfiles/vim-plugins/vim-singularity-syntax;
-              buildPhase = ":";
-              configurePhase = ":";
-            };
-            jonas = pkgs.vimUtils.buildVimPlugin {
-              name = "jonas";
-              src = ~/.dotfiles/vim-plugins/jonas;
-            };
-          };
-        in
-        {
-          enable = true;
-          plugins = with vimPlugins; [
-            jonas
-            ctrlp
-            neocomplete
-            nerdcommenter
-            nerdtree
-            supertab
-            syntastic
-            tabular
-            tlib_vim
-            vim-addon-mw-utils
-            vim-airline
-            vim-airline-themes
-            NeoSolarized
-            vim-commentary
-            vim-fish
-            vim-markdown
-            vim-nix
-            vimproc
-            vim-sensible
-            vim-snipmate
-            vim-surround
-            vim-unimpaired
-            vim-gnupg
-            vim-singularity-syntax
-          ];
-          extraConfig = builtins.readFile ../../../vimrc;
-        };
+      neovim = {
+        enable = true;
+        plugins = with pkgs.vimPlugins; [
+          vim-nix
+          vim-fish
+          vim-better-whitespace
+          vim-commentary
+          vim-markdown
+          vim-sensible
+        ];
+        extraConfig = builtins.readFile ../../../vimrc;
+      };
 
       git = {
         enable = true;
         aliases = {
-          ll = "log --stat --abbrev-commit --decorate";
-          history = "log --graph --abbrev-commit --decorate --all";
-          co = "checkout";
-          ci = "commit";
+          cl = "clone --recursive";
+          su = "submodule update --init --recursive";
           st = "status";
-          unstage = "reset HEAD";
-          pick = "cherry-pick";
-          ltr = "branch --sort=-committerdate";
+          sw = "switch";
+          wdiff = "diff --color-words";
+          graph = "log --all --graph --decorate --oneline";
+#         new = "!f() { git switch -c ${1} refs/remotes/origin/HEAD; }; f";
         };
-        ignores = ["*~" "*.o" "*.a" "*.dll" "*.bak" "*.old"];
+#       ignores = ["*~" "*.o" "*.a" "*.dll" "*.bak" "*.old"];
+        userName = "Radovan Bast";
+        userEmail = "bast@users.noreply.github.com";
         extraConfig = {
-          merge = {
-            tool = "meld";
-          };
           color = {
-            branch = "auto";
             diff = "auto";
             status = "auto";
+            branch = "auto";
+            ui = "auto";
+          };
+          pager = {
+            grep = "off";
+          };
+          core = {
+            editor = "vim";
+#           pager = "cat";
+          };
+          apply = {
+            whitespace = "nowarn";
+          };
+          mergetool = {
+            keepBackup = false;
+            tool = "meld";
+          };
+          difftool = {
+            prompt = false;
           };
           push = {
-            # matching, tracking or current
-            default = "current";
+            default = "simple";
           };
           pull = {
             rebase = false;
           };
-          core = {
-            editor = "vim";
-          };
-          help = {
-            autocorrect = 1;
-          };
-          http = {
-            sslVerify = false;
+          init = {
+            defaultBranch = "main";
           };
         };
       };
 
-      ssh = {
-        enable = true;
-        compression = false;
-        forwardAgent = true;
-        serverAliveInterval = 30;
-        extraConfig = "IPQoS throughput";
-      };
+#     ssh = {
+#       enable = true;
+#       compression = false;
+#       forwardAgent = true;
+#       serverAliveInterval = 30;
+#       extraConfig = ''
+#         IPQoS throughput
+#         UpdateHostKeys no
+#         '';
+#     };
 
       tmux = {
         enable = true;
@@ -255,7 +218,7 @@ let
 
     xdg.dataFile = {
       j = {
-        source = ~/.dotfiles/config/fish/themes/j;
+        source = ~/.dotfiles/config/fish/themes/r;
         target = "omf/themes/j";
         recursive = false;
       };
@@ -288,25 +251,6 @@ let
         a // mkHomeFile x) {} cfg.extraDotfiles;
   };
 
-  vimDevPlugins =
-    let
-      vim-ionide = pkgs.vimUtils.buildVimPlugin {
-          name = "vim-ionide";
-          src = ~/.dotfiles/vim-plugins/Ionide-vim;
-          buildInputs = [ pkgs.curl pkgs.which pkgs.unzip ];
-        };
-      devPlugins = with pkgs.vimPlugins; [
-          LanguageClient-neovim
-          idris-vim
-          neco-ghc
-          purescript-vim
-          vim-ionide
-          rust-vim
-          # vim-clojure-static
-          # vim-clojure-highlight
-        ];
-    in { programs.neovim.plugins = devPlugins; };
-
   # settings when not running under NixOS
   plainNix = {
     home.sessionVariables = {
@@ -334,15 +278,12 @@ in
       default = [];
     };
 
-    vimDevPlugins = mkEnableOption "Enable vim devel plugins";
-
     plainNix = mkEnableOption "Tweaks for non-NixOS systems";
   };
 
   config = mkMerge [
     configuration
     extraHomeFiles
-    (mkIf cfg.vimDevPlugins vimDevPlugins)
   ];
 }
 

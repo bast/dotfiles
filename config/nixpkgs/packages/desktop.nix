@@ -22,13 +22,11 @@ let
   };
 
   media = with pkgs; [
-    # guvcview # webcam
-    # shotcut
     inkscape
     obs-studio
-    audacity
-    xf86_input_wacom
-    mpv
+#   audacity
+#   xf86_input_wacom
+#   mpv
   ];
 
   x11 = with pkgs.xorg; [
@@ -81,53 +79,28 @@ let
 
   graphics = with pkgs; [
     imagemagick
-    scrot
-    krita
-    # inkscape
+#   inkscape
   ];
 
   desktop = with pkgs; [
-    #wireshark-qt
     google-chrome
     firefox
-    drive
+    tree
+    pulsemixer
+    tldr
     rdesktop
-    remmina
-    # googleearth
-    # taskwarrior
-    # timewarrior
     pass
-    pavucontrol
-    # spotify
-    # ledger
-    # browserpass
     blueman
     gparted
-    # calibre
-    fira-code
     keybase
     keybase-gui
     pandoc
-    pinentry
-    polkit_gnome
-    cdrtools
-    innoextract
-    tectonic
-    unrtf
-    virtmanager
-    qrencode
-    wkhtmltopdf
-    zbar
-    yubikey-personalization
   ];
 
   chat = with pkgs; [
     teams
-    discord
     signal-desktop
-    # slack
-    # pidgin
-    # pidginsipe
+    slack
   ];
 
   useIf = x: y: if x then y else [];

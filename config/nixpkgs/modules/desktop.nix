@@ -6,7 +6,8 @@ let
   configuration = {
     dotfiles.packages.desktop.enable = mkDefault true;
 
-    dotfiles.desktop.xmonad.enable = mkDefault true;
+    dotfiles.desktop.xmonad.enable = mkDefault false;
+    dotfiles.desktop.i3.enable = mkDefault true;
 
     programs = {
       browserpass.enable = true;
@@ -64,12 +65,11 @@ let
 
       gpg-agent = {
         enable = true;
-        enableSshSupport = true;
+#       enableSshSupport = true;
         defaultCacheTtl = 43200; # 12 hours
-        defaultCacheTtlSsh = 43200;
+#       defaultCacheTtlSsh = 43200;
         maxCacheTtl = 604800; # 7 days
-        maxCacheTtlSsh = 604800;
-        # pinentryFlavor = "gtk2";
+#       maxCacheTtlSsh = 604800;
         pinentryFlavor = "gnome3";
       };
 
@@ -179,5 +179,5 @@ in
       (mkIf cfg.dropbox.enable dropbox)
   ]);
 
-  imports = [ ./xmonad.nix ];
+  imports = [ ./xmonad.nix ./i3.nix ];
 }

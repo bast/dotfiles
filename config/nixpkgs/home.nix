@@ -2,10 +2,10 @@
 {
   dotfiles = {
     desktop = {
-      enable = false;
+      enable = true;
       dropbox.enable = false;
       polybar = {
-      	interface = "eno1";
+      	interface = "eno2";
       	laptop = false;
       };
     };
@@ -14,54 +14,42 @@
         enable = true;
         nix = true;
         db = false;
-        dotnet = false;
-        node = false;
-        rust = false;
+        dotnet = true;
+        node = true;
+        rust = true;
         haskell = false;
-        python = false;
+        python = true;
         go = false;
         java = false;
         clojure = false;
       };
       desktop = {
-        enable = false;
+        enable = true;
         gnome = true;
         x11 = true;
         media = true;
         chat = true;
         graphics = true;
         wavebox = false;
-        zoom = false;
+        zoom = true;
       };
       kubernetes = true;
       cloud = true;
       geo = false;
     };
     extraDotfiles = [
-      "bcrc"
-      "codex"
-      "ghci"
-      "haskeline"
-      "taskrc"
+      # "bcrc"
+      # "ghci"
+      # "haskeline"
     ];
-    vimDevPlugins = false;
   };
 
   home.packages = with pkgs; [];
 
   programs = {
     git = {
-      userEmail = "jonas.juselius@tromso.serit.no";
-      userName = "Jonas Juselius";
       signing = {
-        key = "jonas@juselius.io";
-      };
-    };
-
-    ssh.matchBlocks = {
-      example = {
-        user = "foo";
-        hostname = "acme.com";
+        key = "bast";
       };
     };
   };
