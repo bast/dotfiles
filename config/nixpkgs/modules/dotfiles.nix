@@ -7,7 +7,6 @@ let
     manual.manpages.enable = true;
 
     programs = {
-      htop.enable = true;
       man.enable = true;
       lesspipe.enable = false;
       dircolors.enable = true;
@@ -79,6 +78,7 @@ let
           };
           pager = {
             grep = "off";
+            diff = "off";
           };
           core = {
             editor = "vim";
@@ -232,25 +232,6 @@ let
     };
   };
 
-  extraHomeFiles = {
-    home.file = {
-      local-bin = {
-        source = ~/.dotfiles/local/bin;
-        target = ".local/bin";
-        recursive = true;
-      };
-    } // builtins.foldl' (a: x:
-      let
-        mkHomeFile = x: {
-          ${x} = {
-            source = ~/. + "/.dotfiles/${x}";
-            target = ".${x}";
-          };
-        };
-      in
-        a // mkHomeFile x) {} cfg.extraDotfiles;
-  };
-
   # settings when not running under NixOS
   plainNix = {
     home.sessionVariables = {
@@ -273,17 +254,11 @@ let
 in
 {
   options.dotfiles = {
-    extraDotfiles = mkOption {
-      type = types.listOf types.str;
-      default = [];
-    };
-
     plainNix = mkEnableOption "Tweaks for non-NixOS systems";
   };
 
   config = mkMerge [
     configuration
-    extraHomeFiles
   ];
 }
 

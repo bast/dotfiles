@@ -4,21 +4,6 @@ let
   cfg = config.dotfiles.desktop.i3;
 
   configuration = {
-    # home.file.xmobarrc = {
-    #   source = ~/.xmonad/xmobarrc;
-    #   target = ".xmobarrc";
-    #   recursive = false;
-    # };
-
-    # xdg.dataFile = {
-    #   xmonad-desktop = {
-    #     source = ~/.xmonad/Xmonad.desktop;
-    #     target = "applications/Xmonad.desktop";
-    #   };
-    # };
-
-    dotfiles.desktop.polybar.enable = mkDefault false;
-
     xsession = {
       enable = true;
       initExtra = ''
@@ -51,7 +36,5 @@ in {
   };
 
   config = mkIf cfg.enable configuration;
-
-  imports = [ ./polybar.nix ];
 }
 

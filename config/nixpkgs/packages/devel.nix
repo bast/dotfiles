@@ -17,47 +17,6 @@ let
   };
 
   base = with pkgs; [
-    git
-    binutils
-    gcc
-    gdb
-    gnumake
-    cmake
-    libxml2
-    docker_compose
-    gettext
-    gnum4
-    chromedriver # for selenium
-    jq
-    websocat
-    meld
-    automake
-    autoconf
-    libtool
-    # sqsh
-  ];
-
-  haskell = with pkgs; [
-    ghc
-    # stack
-    hie
-    cabal-install
-    hlint
-    hoogle
-    # cabal2nix
-    # alex
-    # happy
-    # cpphs
-    # hscolour
-    # haddock
-    # pointfree
-    # pointful
-    # hasktags
-    # threadscope
-    # hindent
-    # codex
-    # hscope
-    # glirc
   ];
 
   dotnet = {
@@ -78,38 +37,6 @@ let
       ]))
   ];
 
-  node = with pkgs.nodePackages; [
-    pkgs.nodejs
-    npm
-    yarn
-    webpack
-    # node2nix
-    # gulp
-    # bundler
-    # bundix
-    # yo
-    # purescript
-    # psc-package
-    # pulp
-    # cordova
-  ];
-
-  rust = with pkgs; [
-    cargo
-    rustfmt
-    rustPackages.clippy
-  ];
-
-  go = with pkgs; [
-    go
-    go2nix
-  ];
-
-  clojure = with pkgs; [
-    clooj
-    leiningen
-  ];
-
   nix = with pkgs; [
     niv
     lorri
@@ -117,44 +44,19 @@ let
     patchelf
   ];
 
-  db = with pkgs; [
-    postgresql
-    sqlite-interactive
-  ];
-
-  java = with pkgs; [
-    openjdk
-    gradle
-    ant
-  ];
-
   useIf = x: y: if x then y else [];
 
   enabledPackages =
     base ++
-    useIf cfg.devel.node node ++
-    useIf cfg.devel.rust rust ++
-    useIf cfg.devel.haskell haskell ++
     useIf cfg.devel.python python ++
-    useIf cfg.devel.go go ++
-    useIf cfg.devel.clojure clojure ++
-    useIf cfg.devel.nix nix ++
-    useIf cfg.devel.java java ++
-    useIf cfg.devel.db db;
+    useIf cfg.devel.nix nix;
 in {
   options.dotfiles.packages = {
     devel = {
       enable = mkEnableOption "Enable development packages";
       dotnet = mkEnableOption "Enable dotnet sdk";
-      node = mkEnableOption "Enable Node.js";
       nix = mkEnableOption "Enable nix";
-      rust = mkEnableOption "Enable Rust";
-      haskell = mkEnableOption "Enable Haskell";
       python = mkEnableOption "Enable Python";
-      go = mkEnableOption "Enable Go";
-      clojure = mkEnableOption "Enable Clojure";
-      java = mkEnableOption "Enable Java";
-      db = mkEnableOption "Enable database cli tools";
     };
   };
 

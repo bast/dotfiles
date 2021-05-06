@@ -1,27 +1,71 @@
-{pkgs, lib, ...}:
-{
+{ pkgs, ... }:
+
+let
+  base_packages = with pkgs; [
+    blueman
+    firefox
+    google-chrome
+    gparted
+    gnupg
+    keybase
+    keybase-gui
+    pandoc
+    pass
+    pulsemixer
+    rdesktop
+    zoom-us
+    imagemagick
+    inkscape
+    meld
+    git
+  ];
+
+  rust_packages = with pkgs; [
+    cargo
+    rustfmt
+    rustPackages.clippy
+  ];
+
+  build_packages = with pkgs; [
+    binutils
+    gcc
+    gdb
+    gnumake
+    cmake
+    automake
+    autoconf
+    libtool
+  ];
+
+  node_packages = with pkgs; [
+    nodejs
+    nodePackages.npm
+    nodePackages.yarn
+    nodePackages.webpack
+  ];
+
+  cl_packages = with pkgs; [
+    exa
+    ripgrep
+    fd
+    bat
+    sshuttle
+    htop
+    tldr
+    tree
+  ];
+
+in {
   dotfiles = {
     desktop = {
       enable = true;
-      dropbox.enable = false;
-      polybar = {
-      	interface = "eno2";
-      	laptop = false;
-      };
     };
     packages = {
       devel = {
         enable = true;
         nix = true;
-        db = false;
         dotnet = true;
-        node = true;
-        rust = true;
-        haskell = false;
         python = true;
-        go = false;
-        java = false;
-        clojure = false;
       };
       desktop = {
         enable = true;
@@ -29,22 +73,16 @@
         x11 = true;
         media = true;
         chat = true;
-        graphics = true;
-        wavebox = false;
-        zoom = true;
       };
-      kubernetes = true;
-      cloud = true;
-      geo = false;
     };
-    extraDotfiles = [
-      # "bcrc"
-      # "ghci"
-      # "haskeline"
-    ];
   };
 
-  home.packages = with pkgs; [];
+  home.packages =
+    base_packages ++
+    rust_packages ++
+    node_packages ++
+    cl_packages ++
+    build_packages;
 
   programs = {
     git = {
@@ -52,6 +90,9 @@
         key = "bast";
       };
     };
+
+
+
   };
 
   imports = [ ./modules ];
