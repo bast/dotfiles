@@ -22,6 +22,7 @@ let
 
   rust_packages = with pkgs; [
     cargo
+    rustc
     rustfmt
     rustPackages.clippy
   ];

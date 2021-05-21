@@ -32,8 +32,9 @@ let
     (python3.withPackages (ps: with ps; [
         numpy
         matplotlib
-        tkinter
+#       tkinter
         virtualenv
+        click
       ]))
   ];
 
