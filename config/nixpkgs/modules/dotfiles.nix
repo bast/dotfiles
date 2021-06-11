@@ -29,7 +29,7 @@ let
           ls = "exa $argv";
           ll = "ls -l --sort=modified --reverse";
           cat = "bat -p $argv";
-          grep = "rg --hidden $argv";
+#         grep = "rg --hidden $argv";
           home-manager = "home-manager -f ~/.dotfiles/config/nixpkgs/home.nix";
         };
         functions = {

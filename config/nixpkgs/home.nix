@@ -36,6 +36,7 @@ let
     automake
     autoconf
     libtool
+    squashfsTools
   ];
 
   node_packages = with pkgs; [
