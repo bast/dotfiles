@@ -18,7 +18,14 @@ let
           set -e TMUX_TMPDIR
           set PATH ~/.local/bin $HOME/.nix-profile/bin ~/.dotnet/tools $PATH
           bind \cp push-line
-        '';
+          bind -m insert \cp push-line
+
+          # for vi mode
+          set fish_cursor_default block
+          set fish_cursor_insert line
+          set fish_cursor_replace_one underscore
+          set fish_cursor_visual block
+        '' + (if cfg.fish.vi-mode then "fish_vi_key_bindings" else "");
         promptInit = ''
           set -x fish_prompt_pwd_dir_length 80
           omf theme j
@@ -106,17 +113,6 @@ let
         };
       };
 
-#     ssh = {
-#       enable = true;
-#       compression = false;
-#       forwardAgent = true;
-#       serverAliveInterval = 30;
-#       extraConfig = ''
-#         IPQoS throughput
-#         UpdateHostKeys no
-#         '';
-#     };
-
       tmux = {
         enable = true;
         baseIndex = 1;
@@ -126,12 +122,12 @@ let
         historyLimit = 5000;
         keyMode = "vi";
         plugins = with pkgs; [
-          (tmuxPlugins.mkDerivation {
+          (tmuxPlugins.mkTmuxPlugin {
             pluginName = "statusbar";
             version = "1.0";
             src = ../../../tmux-plugins;
           })
-          (tmuxPlugins.mkDerivation {
+          (tmuxPlugins.mkTmuxPlugin {
             pluginName = "current-pane-hostname";
             version = "master";
             src = fetchFromGitHub {
@@ -141,7 +137,7 @@ let
               sha256 = "1w1x8w351v9yppw37kcs985mm5ikpmdnckfjwqyhlqx90lf9sqdy";
             };
           })
-          (tmuxPlugins.mkDerivation {
+          (tmuxPlugins.mkTmuxPlugin {
             pluginName = "simple-git-status";
             version = "master";
             src = fetchFromGitHub {
@@ -160,9 +156,16 @@ let
         '';
       };
 
+      htop = {
+        enable = true;
+        settings.left_meter_modes = [ "AllCPUs4" "Memory" "Swap" ];
+        settings.right_meter_modes = [ "Tasks" "LoadAverage" "Uptime" ];
+      };
+
+
       home-manager = {
         enable = true;
-        path = "https://github.com/nix-community/home-manager/archive/release-20.09.tar.gz";
+        path = "https://github.com/nix-community/home-manager/archive/release-21.05.tar.gz";
       };
     };
 
@@ -202,8 +205,8 @@ let
         recursive = true;
       };
       nixpkgs = {
-        source = ~/.dotfiles/config/nixpkgs/overlays;
-        target = "nixpkgs/overlays";
+        source = ~/.dotfiles/config/nixpkgs;
+        target = "nixpkgs/";
         recursive = true;
       };
     };
@@ -220,6 +223,11 @@ let
       j = {
         source = ~/.dotfiles/config/fish/themes/r;
         target = "omf/themes/j";
+        recursive = false;
+      };
+      j2 = {
+        source = ~/.dotfiles/config/fish/themes/j2;
+        target = "omf/themes/j2";
         recursive = false;
       };
     };
@@ -255,6 +263,8 @@ in
 {
   options.dotfiles = {
     plainNix = mkEnableOption "Tweaks for non-NixOS systems";
+
+    fish.vi-mode = mkEnableOption "Enable vi-mode for fish";
   };
 
   config = mkMerge [
