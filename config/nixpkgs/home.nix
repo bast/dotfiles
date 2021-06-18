@@ -130,6 +130,7 @@ in {
       vim-markdown
       vim-sensible
       vim-colorschemes
+      rainbow
     ];
   };
 
