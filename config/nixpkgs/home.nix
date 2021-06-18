@@ -20,6 +20,11 @@ let
     git
   ];
 
+# container_packages = with pkgs; [
+#   singularity
+#   squashfsTools
+# ];
+
   rust_packages = with pkgs; [
     cargo
     rustc
@@ -81,21 +86,55 @@ in {
 
   home.packages =
     base_packages ++
+#   container_packages ++
     rust_packages ++
     node_packages ++
     cl_packages ++
     build_packages;
 
-  programs = {
-    git = {
-      signing = {
-        key = "bast";
-      };
-    };
+  programs.alacritty.enable = true;
 
-
-
+  nixpkgs.config = {
+    allowUnfree = true;
   };
+
+  programs.fish = {
+    enable = true;
+    promptInit = ''
+      set -x fish_prompt_pwd_dir_length 80
+    '';
+    shellAliases = {
+      vi = "vim";
+      ls = "exa";
+      ll = "ls -l --sort=modified --reverse";
+      cat = "bat";
+    };
+  };
+
+  xdg.configFile = {
+    fish = {
+      source = ../../fish;
+      target = "fish";
+      recursive = true;
+    };
+  };
+
+  programs.vim = {
+    enable = true;
+    extraConfig = builtins.readFile ../../vimrc;
+    plugins = with pkgs.vimPlugins; [
+      vim-nix
+      vim-fish
+      vim-better-whitespace
+      vim-commentary
+      vim-markdown
+      vim-sensible
+      vim-colorschemes
+    ];
+  };
+
+  home.file.".gitconfig".source = ../../gitconfig;
+  home.file.".alacritty.yml".source = ../../alacritty.yml;
 
   imports = [ ./modules ];
 }

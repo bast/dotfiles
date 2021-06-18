@@ -22,8 +22,9 @@ let
         enable = true;
         config = {
           window.titlebar = false;
-          terminal = "termite";
+          terminal = "alacritty";
           modifier = "Mod4";  # this is the "windows" key
+          defaultWorkspace = "workspace number 1";
         };
       };
     };
