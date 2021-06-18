@@ -64,6 +64,7 @@ let
   ];
 
   cl_packages = with pkgs; [
+    procs
     pandoc
     exa
     ripgrep
@@ -147,10 +148,12 @@ in {
       vim-commentary
       vim-markdown
       vim-sensible
-      vim-colorschemes
-#     rainbow
     ];
   };
+
+  # using custom one because of confusing default matching parentheses setting
+  # https://github.com/tomasr/molokai/pull/44
+  home.file.".vim/colors/molokai.vim".source = ../../vim/colors/molokai.vim;
 
   home.file.".gitconfig".source = ../../gitconfig;
   home.file.".alacritty.yml".source = ../../alacritty.yml;
