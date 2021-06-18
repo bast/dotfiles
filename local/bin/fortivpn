@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-conn=$1
-shift
-
-exec sudo openfortivpn -c ~/.dotfiles/vpn/$conn $@

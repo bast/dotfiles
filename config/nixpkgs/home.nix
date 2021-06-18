@@ -1,29 +1,41 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 let
   base_packages = with pkgs; [
-    blueman
-    firefox
-    google-chrome
+    brave
+    xorg.xmodmap
+    xorg.xev
+#   google-chrome
     gparted
-    gnupg
-    keybase
-    keybase-gui
-    pandoc
-    pass
-    pulsemixer
-    rdesktop
-    zoom-us
     imagemagick
     inkscape
-    meld
-    git
   ];
 
-# container_packages = with pkgs; [
-#   singularity
-#   squashfsTools
-# ];
+  encryption_packages = with pkgs; [
+    keybase-gui
+    pass
+  ];
+
+  emulator_packages = with pkgs; [
+    dosbox
+    uae
+  ];
+
+  chat_packages = with pkgs; [
+    slack
+    teams
+  ];
+
+  audio_video_packages = with pkgs; [
+    pulsemixer
+    zoom-us
+    vlc
+  ];
+
+  container_packages = with pkgs; [
+    singularity
+    squashfsTools
+  ];
 
   rust_packages = with pkgs; [
     cargo
@@ -41,7 +53,7 @@ let
     automake
     autoconf
     libtool
-    squashfsTools
+    valgrind
   ];
 
   node_packages = with pkgs; [
@@ -52,6 +64,7 @@ let
   ];
 
   cl_packages = with pkgs; [
+    pandoc
     exa
     ripgrep
     fd
@@ -60,6 +73,7 @@ let
     htop
     tldr
     tree
+    neofetch
   ];
 
 in {
@@ -86,6 +100,10 @@ in {
 
   home.packages =
     base_packages ++
+    encryption_packages ++
+    emulator_packages ++
+    chat_packages ++
+    audio_video_packages ++
 #   container_packages ++
     rust_packages ++
     node_packages ++
@@ -130,7 +148,7 @@ in {
       vim-markdown
       vim-sensible
       vim-colorschemes
-      rainbow
+#     rainbow
     ];
   };
 

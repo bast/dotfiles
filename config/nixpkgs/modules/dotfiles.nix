@@ -27,11 +27,10 @@ let
     };
 
     home.sessionVariables = {
-      EDITOR = "nvim";
-      VISUAL = "nvim";
-      KUBE_EDITOR = "nvim";
-      LESS = "-MiScR";
-      GIT_ALLOW_PROTOCOL = "ssh:https:keybase:file";
+      EDITOR = "vim";
+      VISUAL = "vim";
+#     LESS = "-MiScR";
+#     GIT_ALLOW_PROTOCOL = "ssh:https:keybase:file";
       LD_LIBRARY_PATH = "$HOME/.nix-profile/lib";
     };
 

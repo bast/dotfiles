@@ -1,3 +1,0 @@
-#!/bin/sh
-
-nix-instantiate --eval -E "with import <nixpkgs> {}; ${1}.outPath" | tr -d '"'
