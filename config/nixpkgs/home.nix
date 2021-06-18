@@ -126,7 +126,7 @@ in {
       vi = "vim";
       ls = "exa";
       ll = "ls -l --sort=modified --reverse";
-      cat = "bat";
+      cat = "bat --style=plain --paging=never";
     };
   };
 
